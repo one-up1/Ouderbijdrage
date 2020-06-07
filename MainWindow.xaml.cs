@@ -43,12 +43,12 @@ namespace Ouderbijdrage
             }
         }
 
-        private void dpDate_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        private void cbSingleParent_CheckedChanged(object sender, RoutedEventArgs e)
         {
             Calc();
         }
 
-        private void cbSingleParent_CheckedChanged(object sender, RoutedEventArgs e)
+        private void dpDate_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
             Calc();
         }
