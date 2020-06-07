@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -55,13 +56,29 @@ namespace Ouderbijdrage
 
         private void Calc()
         {
+            if (lCost == null)
+            {
+                // Omdat ik in MainWindow.xaml een SelectedDate opgeef voor de pijldatum zodat deze
+                // standaard de huidige datum heeft, wordt blijkbaar ook bij het opstarten de
+                // SelectedDateChanged listener aangeroepen die deze functie aanroept en dan crasht
+                // het programma omdat lCost nog null is.
+                return;
+            }
             lCost.Content = "";
-            if (lbChildren.Items.Count == 0) return;
-            if (dpDate.SelectedDate == null) return;
+            if (lbChildren.Items.Count == 0)
+            {
+                Console.WriteLine("No children specified");
+                return;
+            }
+            if (dpDate.SelectedDate == null)
+            {
+                Console.WriteLine("No date specified");
+                return;
+            }
 
-            double cost = 50; //Basisbedrag.
+            double cost = 50; // Basisbedrag.
 
-            int count1 = 0, count2 = 0;
+            int count1 = 0, count2 = 0, ignored = 0;
             foreach (Child child in lbChildren.Items)
             {
                 int age = child.GetAge(dpDate.SelectedDate.Value);
@@ -75,6 +92,10 @@ namespace Ouderbijdrage
                         cost += 25;
                         count1++;
                     }
+                    else
+                    {
+                        ignored++;
+                    }
                 }
                 else
                 {
@@ -84,7 +105,21 @@ namespace Ouderbijdrage
                         cost += 37;
                         count2++;
                     }
+                    else
+                    {
+                        ignored++;
+                    }
                 }
+            }
+
+            // Voor éénoudergezinnen wordt op de berekende bijdrage
+            // (nadat de controle op het maximum heeft plaatsgevonden)
+            // een reductie toegepast van 25%.
+            if (cbSingleParent.IsChecked == true)
+            {
+                // Moet deze reductie worden toegepast voor of nadat het maximum van 150 is
+                // toegepast? (anders zou het maximum voor eenoudergezinnen 112.5 zijn)
+                cost *= 0.75;
             }
 
             // De maximale ouderbijdrage bedraagt € 150.
@@ -93,15 +128,31 @@ namespace Ouderbijdrage
                 cost = 150;
             }
 
-            // Voor éénoudergezinnen wordt op de berekende bijdrage
-            // (nadat de controle op het maximum heeft plaatsgevonden)
-            // een reductie toegepast van 25%.
-            if (cbSingleParent.IsChecked == true)
+            // Laat resultaat zien met de aantallen en de bijdrage.
+            if (count1 != 0)
             {
-                cost *= 0.75;
+                lCost.Content += FormatChildCount(count1) +
+                    " jonger dan 10 jaar" + Environment.NewLine;
             }
+            if (count2 != 0)
+            {
+                lCost.Content += FormatChildCount(count2) +
+                    " van 10 jaar en ouder" + Environment.NewLine;
+            }
+            if (ignored != 0)
+            {
+                lCost.Content += FormatChildCount(ignored) +
+                    " niet meegeteld" + Environment.NewLine;
+            }
+            lCost.Content += "Ouderbijdrage: € " + Math.Round(cost, 2).ToString("0.00");
+        }
 
-            lCost.Content = "Ouderbijdrage: € " + Math.Round(cost, 2).ToString("0.00");
+        private static String FormatChildCount(int i)
+        {
+            String s = i + " kind";
+            if (i != 1)
+                s += "eren";
+            return s;
         }
 
         private class Child
