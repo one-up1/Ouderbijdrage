@@ -1,0 +1,51 @@
+﻿<Window x:Class="Ouderbijdrage.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Ouderbijdrage"
+        mc:Ignorable="d"
+        Width="800"
+        Height="450"
+        WindowStartupLocation="CenterScreen"
+        Title="Ouderbijdrage">
+    
+    <StackPanel>
+        
+        <ListBox
+            Name="lbChildren"
+            Height="100"/>
+
+        <TextBox
+            Name="tbName" />
+
+        <DatePicker
+            Name="dpDateOfBirth"/>
+
+        <Button
+            Name="bAddChild"
+            Content="Toevoegen"
+            Click="bAddChild_Click" />
+
+        <Button
+            Name="bRemoveChild"
+            Content="Verwijderen"
+            Click="bRemoveChild_Click" />
+
+        <CheckBox
+            Name="cbSingleParent"
+            Content="Éénoudergezin"
+            Checked="cbSingleParent_CheckedChanged"
+            Unchecked="cbSingleParent_CheckedChanged" />
+        <!-- CheckBox heeft geen "CheckedChanged" event maar je moet 2 event handlers gebruiken? -->
+
+        <DatePicker
+            Name="dpDate"
+            SelectedDateChanged="dpDate_SelectedDateChanged" />
+
+        <Label
+            Name="lCost" />
+
+    </StackPanel>
+    
+</Window>
