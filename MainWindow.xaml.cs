@@ -151,7 +151,9 @@ namespace Ouderbijdrage
         {
             String s = i + " kind";
             if (i != 1)
+            {
                 s += "eren";
+            }
             return s;
         }
 
@@ -173,7 +175,15 @@ namespace Ouderbijdrage
 
             public int GetAge(DateTime date)
             {
-                return (int) (date - dateOfBirth).TotalDays / 365;
+                // Dit houdt geen rekening met schrikkeljaren.
+                //return (int) (date - dateOfBirth).TotalDays / 365;
+
+                // Dit is blijkbaar nog niet zo simpel als je misschien zou denken
+                // en er zijn ook veel verschillende oplossingen voor te vinden.
+                // https://stackoverflow.com/questions/9/in-c-how-do-i-calculate-someones-age-based-on-a-datetime-type-birthday
+                int a = (date.Year * 100 + date.Month) * 100 + date.Day;
+                int b = (dateOfBirth.Year * 100 + dateOfBirth.Month) * 100 + dateOfBirth.Day;
+                return (a - b) / 10000;
             }
         }
     }
